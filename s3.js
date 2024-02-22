@@ -1,10 +1,10 @@
 // Import the AWS SDK
-const AWS = require('aws-sdk');
+const AWS = require("aws-sdk");
 
 // Configure the AWS SDK with your credentials
 AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
 });
 
 // Function to handle uploading to AWS S3
@@ -19,7 +19,10 @@ async function uploadToS3(file) {
     });
 
     // Generate a unique file key based on the current timestamp and file name
-    const fileKey = `uploads/${Date.now().toString()}-${file.name.replace(/ /g, '-')}`;
+    const fileKey = `uploads/${Date.now().toString()}-${file.name.replace(
+      / /g,
+      "-"
+    )}`;
 
     // Set up parameters for the S3 upload
     const params = {
@@ -32,12 +35,18 @@ async function uploadToS3(file) {
     const upload = s3.upload(params).promise();
 
     // Log progress during the upload
-    upload.on('httpUploadProgress', evt => {
-      console.log("Uploading to S3...", parseInt(((evt.loaded * 100) / evt.total).toString()) + "%");
+    upload.on("httpUploadProgress", (evt) => {
+      // Log the percentage of the upload that is complete
+      console.log(
+        "Uploading to S3...",
+        parseInt(((evt.loaded * 100) / evt.total).toString()) + "%"
+      );
     });
 
-    // Wait for the upload to complete
-    await upload;
+    // Wait for the upload to complete before continuing
+    await upload.then((data) => {
+      console.log("Successfully uploaded to S3", file_key);
+    });
 
     // Return file information
     return {
@@ -52,6 +61,7 @@ async function uploadToS3(file) {
 
 // Function to get the publicly accessible S3 URL of a file
 function getS3Url(fileKey) {
+  // Return the URL of the file
   return `https://${process.env.S3_BUCKET_NAME}.s3.ap-southeast-2.amazonaws.com/${fileKey}`;
 }
 
