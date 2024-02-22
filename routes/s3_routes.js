@@ -1,19 +1,24 @@
 import { Router } from "express";
-import { uploadToS3, getS3Url } from "./s3.js";
-
+import { uploadToS3, getS3Url } from "../s3.js";
+import multer from "multer";
 
 const router = Router();
 
+// const upload = multer({ dest: "uploads/" }); // Specify the destination folder to store uploaded files
+
+const upload = multer(); 
+
+
 // Route to upload an image to AWS S3
-router.post("/upload", async (req, res) => {
+router.post("/upload", upload.single("file"), async (req, res) => {
   try {
-    console.log(req.files);
+    console.log(req.file);
     // Check if the request contains a file
-    if (!req.files || !req.files.image) {
+    if (!req.file) {
       return res.status(400).send({ error: "No file uploaded" });
     }
 
-    const imageFile = req.files.image;
+    const imageFile = req.file;
 
     // Call the uploadToS3 function to upload the image to S3
     const result = await uploadToS3(imageFile);
