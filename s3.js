@@ -1,5 +1,5 @@
 // Import the AWS SDK
-const AWS = require("aws-sdk");
+import AWS from 'aws-sdk';
 
 // Configure the AWS SDK with your credentials
 AWS.config.update({
@@ -65,7 +65,8 @@ function getS3Url(fileKey) {
   return `https://${process.env.S3_BUCKET_NAME}.s3.ap-southeast-2.amazonaws.com/${fileKey}`;
 }
 
-module.exports = {
-  uploadToS3,
-  getS3Url,
-};
+// module.exports = {
+//   uploadToS3,
+//   getS3Url,
+// };
+export { uploadToS3, getS3Url };
