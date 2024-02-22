@@ -9,18 +9,19 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-app.listen(3000, () => {
-  console.log("Server is running on http://127.0.0.1:3000");
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.DB_URI); // connect to MongoDB
+    console.log("Connected to MongoDB");
+  } catch (err) {
+    console.error("Error connecting to MongoDB:", err.message);
+    process.exit(1); // Exit process with failure
+  }
+};
+
+connectDB(); // Call the connectDB function
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on http://127.0.0.1:${PORT}`);
 });
-
-try {
-  const m = await mongoose.connect(process.env.DB_URI); // connect to MongoDB
-  console.log(
-    m.connection.readyState === 1 // check if connected
-      ? "Connected to MongoDB"
-      : "Not connected to MongoDB"
-  );
-} catch (err) {
-  console.log(err);
-}
-
