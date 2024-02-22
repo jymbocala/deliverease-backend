@@ -24,7 +24,3 @@ try {
   console.log(err);
 }
 
-console.log("Hello World");
-
-console.log("Jym GitButler Test");
-
