@@ -71,4 +71,30 @@ function getS3Url(fileKey) {
   return `https://${process.env.S3_BUCKET_NAME}.s3.ap-southeast-2.amazonaws.com/${fileKey}`;
 }
 
-export { uploadToS3, getS3Url };
+// Function to delete a file from S3
+async function deleteFromS3(fileKey) {
+  try {
+    const s3 = new AWS.S3({
+      params: {
+        Bucket: process.env.S3_BUCKET_NAME,
+      },
+      region: "ap-southeast-2",
+    });
+
+    // Set up parameters for the S3 delete operation
+    const params = {
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: fileKey,
+    };
+
+    // Delete the object from the S3 bucket
+    await s3.deleteObject(params).promise();
+
+    console.log(`Image ${fileKey} deleted successfully from S3`);
+  } catch (error) {
+    console.error("Error deleting image from S3:", error);
+    throw error;
+  }
+}
+
+export { uploadToS3, getS3Url, deleteFromS3 };
