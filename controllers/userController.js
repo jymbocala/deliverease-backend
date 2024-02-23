@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import UserModel from "../models/user.js";
+import logger from "../utils/logger.js";
 
 // Create a new user
 export const createUser = async (req, res) => {
@@ -10,7 +11,9 @@ export const createUser = async (req, res) => {
     // Check if user already exists
     const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+      // Log error message
+      logger.error(`User already exists with email: ${email}`);
+      return res.status(400).json({ message: "User already exists" });
     }
 
     // Hash the password
@@ -20,12 +23,16 @@ export const createUser = async (req, res) => {
     const newUser = new UserModel({ email, password: hashedPassword, role });
     await newUser.save();
 
+    // Log success message
+    logger.info(`User created: ${newUser}`);
+
     res.status(201).json(newUser);
   } catch (error) {
+    // Log error message
+    logger.error(`Error creating user: ${error.message}`);
     res.status(500).json({ message: error.message });
   }
 };
-
 
 // User login
 export const loginUser = async (req, res) => {
@@ -35,12 +42,16 @@ export const loginUser = async (req, res) => {
     // Check if user exists
     const user = await UserModel.findOne({ email });
     if (!user) {
+      // Log error message
+      logger.error(`User not found with email: ${email}`);
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
     // Validate password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
+      // Log error message
+      logger.error(`Invalid password for user with email: ${email}`);
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
@@ -49,8 +60,13 @@ export const loginUser = async (req, res) => {
       expiresIn: "1h",
     });
 
+    // Log success message
+    logger.info(`User logged in: ${email}`);
+
     res.status(200).json({ token });
   } catch (error) {
+    // Log error message
+    logger.error(`Error logging in user: ${error.message}`);
     res.status(500).json({ message: error.message });
   }
 };
@@ -65,6 +81,10 @@ export const getAllUsers = async (req, res) => {
   try {
     // Check if the user making the request is an admin
     if (req.user.role !== "admin") {
+      // Log error message
+      logger.error(
+        `Unauthorized access: ${req.user.email} attempted to access all users`
+      );
       return res.status(403).json({
         message: "Forbidden: You are not authorized to access this resource",
       });
@@ -72,8 +92,14 @@ export const getAllUsers = async (req, res) => {
 
     // Retrieve all users
     const users = await UserModel.find();
+
+    // Log success message
+    logger.info("All users retrieved");
+
     res.json(users);
   } catch (error) {
+    // Log error message
+    logger.error(`Error retrieving all users: ${error.message}`);
     res.status(500).json({ message: error.message });
   }
 };
@@ -82,9 +108,19 @@ export const getAllUsers = async (req, res) => {
 export const getUser = async (req, res) => {
   try {
     const user = await UserModel.findById(req.params.id);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) {
+      // Log error message
+      logger.error(`User not found with ID: ${req.params.id}`);
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Log success message
+    logger.info(`User retrieved: ${user.email}`);
+
     res.json(user);
   } catch (error) {
+    // Log error message
+    logger.error(`Error retrieving user: ${error.message}`);
     res.status(500).json({ message: error.message });
   }
 };
@@ -94,6 +130,10 @@ export const updateUser = async (req, res) => {
   try {
     // Check if the user making the request is an admin
     if (req.user.role !== "admin") {
+      // Log error message
+      logger.error(
+        `Unauthorized access: ${req.user.email} attempted to update user with ID: ${req.params.id}`
+      );
       return res.status(403).json({
         message: "Forbidden: You are not authorized to access this resource",
       });
@@ -103,9 +143,19 @@ export const updateUser = async (req, res) => {
     const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) {
+      // Log error message
+      logger.error(`User not found with ID: ${req.params.id}`);
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Log success message
+    logger.info(`User updated: ${user.email}`);
+
     res.json(user);
   } catch (error) {
+    // Log error message
+    logger.error(`Error updating user: ${error.message}`);
     res.status(500).json({ message: error.message });
   }
 };
@@ -115,6 +165,10 @@ export const deleteUser = async (req, res) => {
   try {
     // Check if the user making the request is an admin
     if (req.user.role !== "admin") {
+      // Log error message
+      logger.error(
+        `Unauthorized access: ${req.user.email} attempted to delete user with ID: ${req.params.id}`
+      );
       return res.status(403).json({
         message: "Forbidden: You are not authorized to access this resource",
       });
@@ -122,9 +176,19 @@ export const deleteUser = async (req, res) => {
 
     // Delete the user
     const user = await UserModel.findByIdAndDelete(req.params.id);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) {
+      // Log error message
+      logger.error(`User not found with ID: ${req.params.id}`);
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Log success message
+    logger.info(`User deleted: ${user.email}`);
+
     res.json({ message: "User deleted" });
   } catch (error) {
+    // Log error message
+    logger.error(`Error deleting user: ${error.message}`);
     res.status(500).json({ message: error.message });
   }
 };

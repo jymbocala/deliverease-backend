@@ -1,11 +1,13 @@
 import jwt from 'jsonwebtoken';
 import UserModel from '../models/user.js';
+import logger from '../utils/logger.js';
 
 const authMiddleware = async (req, res, next) => {
   try {
     // Get the token from the request headers
     const authHeader = req.header('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      logger.error('Authentication failed: Token missing or invalid format');
       return res.status(401).json({ error: 'Authentication failed: Token missing or invalid format' });
     }
     const token = authHeader.substring(7); // Remove 'Bearer ' from the beginning
@@ -13,19 +15,22 @@ const authMiddleware = async (req, res, next) => {
     // Verify the token using the JWT secret key
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (!decoded) {
+      logger.error('Authentication failed: Invalid token');
       return res.status(401).json({ error: 'Authentication failed: Invalid token' });
     }
 
     // Find the user associated with the token
-    console.log('Decoded token:', decoded); // Log the decoded token to see its content
-    const user = await UserModel.findById(decoded.userId); // Change to findById based on token content
-    console.log('Found user:', user); // Log the found user object
+    logger.info('Decoded token:', decoded);
+    const user = await UserModel.findById(decoded.userId);
+    logger.info('Found user:', user);
     if (!user) {
+      logger.error('Authentication failed: User not found');
       return res.status(401).json({ error: 'Authentication failed: User not found' });
     }
 
     // Check if the user has admin role
     if (user.role !== 'admin') {
+      logger.error('Forbidden: User is not authorized to access this resource');
       return res.status(403).json({ error: 'Forbidden: User is not authorized to access this resource' });
     }
 
@@ -36,7 +41,7 @@ const authMiddleware = async (req, res, next) => {
     // Proceed to the protected route
     next();
   } catch (error) {
-    console.error('Authentication error:', error);
+    logger.error('Authentication error:', error);
     return res.status(401).json({ error: 'Authentication failed: Invalid token' });
   }
 };
