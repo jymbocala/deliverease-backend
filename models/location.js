@@ -34,6 +34,10 @@ const locationSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', // Reference to the User model
+    }
 });
 
 const LocationModel = mongoose.model('Location', locationSchema);
