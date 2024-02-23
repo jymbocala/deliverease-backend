@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { uploadToS3, getS3Url } from "../s3.js";
+import { uploadToS3, getS3Url, deleteFromS3 } from "../s3.js";
 import multer from "multer";
 
 const router = Router();
@@ -41,6 +41,20 @@ router.get("/url/:fileKey", (req, res) => {
 
   // Send the URL back as a response
   res.json({ url: s3Url });
+});
+
+// Route to delete an image from AWS S3
+router.delete("/delete/:fileKey", async (req, res) => {
+  try {
+    const fileKey = req.params.fileKey;
+
+    await deleteFromS3(fileKey); // Implement this function in your s3.js file
+
+    res.json({ message: "Image deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting file from S3:", error);
+    res.status(500).send({ error: "Failed to delete image" });
+  }
 });
 
 export default router;
