@@ -1,13 +1,17 @@
 import express from 'express';
+import authMiddleware from '../middleware/authMiddleware.js'; // Import the authMiddleware
 import {
     createLocation,
+    getAllLocations,
     getLocation,
     updateLocation,
-    deleteLocation,
-    getAllLocations
-} from '../controllers/locationController.js';
+    deleteLocation
+} from '../controllers/locationController.js'; // Import the locationController
 
 const router = express.Router();
+
+// Apply the authMiddleware to all routes in this router
+router.use(authMiddleware);
 
 // Route to create a new location
 router.post('/new', createLocation);
