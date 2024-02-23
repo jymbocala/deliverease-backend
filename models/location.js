@@ -34,10 +34,8 @@ const locationSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
-    }
-);
+});
 
 const LocationModel = mongoose.model('Location', locationSchema);
 
 export default LocationModel;
-
