@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 // Load environment variables from the .env file
 dotenv.config();
 
-
 // Configure the AWS SDK with your credentials
 AWS.config.update({
   accessKeyId: process.env.S3_ACCESS_KEY_ID,
@@ -14,13 +13,10 @@ AWS.config.update({
 
 // Function to upload a file to S3
 async function uploadToS3(file) {
-  // Log checks to see the file object and buffer 
-  console.log("File object:", file); // Output should be the file object 
-  console.log("File buffer:", file.buffer); // Output should be the file buffer which is a binary representation of the file
-
+  console.log("File object:", file); // Output should be the file object
 
   try {
-    // Create a new instance of the S3 service 
+    // Create a new instance of the S3 service
     const s3 = new AWS.S3({
       params: {
         Bucket: process.env.S3_BUCKET_NAME,
@@ -29,7 +25,7 @@ async function uploadToS3(file) {
     });
 
     // Generate a unique file key based on the current timestamp and file name
-    const fileKey = `uploads/${Date.now().toString()}-${file.originalname.replace(
+    const fileKey = `${Date.now().toString()}-${file.originalname.replace(
       / /g,
       "-"
     )}`;
@@ -70,6 +66,7 @@ async function uploadToS3(file) {
 
 // Function to get the publicly accessible S3 URL of a file
 function getS3Url(fileKey) {
+  // console.log("File key:", fileKey); // Output should be the file key
   // Return the URL of the file
   return `https://${process.env.S3_BUCKET_NAME}.s3.ap-southeast-2.amazonaws.com/${fileKey}`;
 }

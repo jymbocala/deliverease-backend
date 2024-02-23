@@ -6,13 +6,12 @@ const router = Router();
 
 // const upload = multer({ dest: "uploads/" }); // Specify the destination folder to store uploaded files
 
-const upload = multer(); 
-
+const upload = multer();
 
 // Route to upload an image to AWS S3
 router.post("/upload", upload.single("file"), async (req, res) => {
   try {
-    console.log(req.file);
+    // console.log(req.file);
     // Check if the request contains a file
     if (!req.file) {
       return res.status(400).send({ error: "No file uploaded" });
@@ -34,6 +33,8 @@ router.post("/upload", upload.single("file"), async (req, res) => {
 // Route to get the publicly accessible URL of an image from S3
 router.get("/url/:fileKey", (req, res) => {
   const fileKey = req.params.fileKey;
+
+  // console.log("File key:", fileKey);
 
   // Call the getS3Url function to get the URL of the image
   const s3Url = getS3Url(fileKey);
