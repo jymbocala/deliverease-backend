@@ -41,6 +41,7 @@ export const getAllLocations = async (req, res) => {
     // Log success message
     logger.info("All locations retrieved");
 
+    // Send the response
     res.json(locations);
   } catch (error) {
     // Log error message
@@ -63,6 +64,7 @@ export const getLocation = async (req, res) => {
     // Log success message
     logger.info(`Location retrieved: ${location}`);
 
+    // Send the response
     res.json(location);
   } catch (error) {
     // Log error message
@@ -90,6 +92,7 @@ export const updateLocation = async (req, res) => {
     // Log success message
     logger.info(`Location updated: ${location}`);
 
+    // Send the response
     res.json(location);
   } catch (error) {
     // Log error message
@@ -112,6 +115,7 @@ export const deleteLocation = async (req, res) => {
     // Log success message
     logger.info(`Location deleted: ${location}`);
 
+    // Send the response
     res.json({ message: "Location deleted" });
   } catch (error) {
     // Log error message
