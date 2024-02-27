@@ -3,6 +3,7 @@ import authMiddleware from '../middleware/authMiddleware.js'; // Import the auth
 import {
     createLocation,
     getAllLocations,
+    getUserLocations,
     getLocation,
     updateLocation,
     deleteLocation
@@ -18,6 +19,9 @@ router.post('/new', createLocation);
 
 // Route to get all locations
 router.get('/', getAllLocations);
+
+// Route to get all user locations
+router.get('/userlocations', getUserLocations);
 
 // Route to get a location by ID
 router.get('/:id', getLocation);

@@ -48,7 +48,17 @@ const locationSchema = new mongoose.Schema({
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', // Reference to the User model
-    }
+    },
+    // dateCreated field is automatically populated with the current date and time
+    dateCreated: {
+        type: Date,
+        default: Date.now,
+    },
+    // imageURL field is optional string
+    imageURL: {
+        type: String,
+        required: false,
+    },
 });
 
 // Create the Location model using the schema
