@@ -63,7 +63,8 @@ export const loginUser = async (req, res) => {
     // Log success message
     logger.info(`User logged in: ${email}`);
 
-    res.status(200).json({ token });
+    // Include the user's ID in the response
+    res.status(200).json({ token, userId: user._id });
   } catch (error) {
     // Log error message
     logger.error(`Error logging in user: ${error.message}`);
@@ -125,11 +126,18 @@ export const getUser = async (req, res) => {
   }
 };
 
-// Update a user by ID (only accessible by admins)
+// Update a user by ID (accessible by the user themselves or admins)
 export const updateUser = async (req, res) => {
   try {
-    // Check if the user making the request is an admin
-    if (req.user.role !== "admin") {
+    const userToUpdate = await UserModel.findById(req.params.id);
+    if (!userToUpdate) {
+      // Log error message
+      logger.error(`User not found with ID: ${req.params.id}`);
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the user making the request is the same as the user being updated or is an admin
+    if (req.user._id.toString() !== userToUpdate._id.toString() && req.user.role !== "admin") {
       // Log error message
       logger.error(
         `Unauthorized access: ${req.user.email} attempted to update user with ID: ${req.params.id}`
@@ -139,20 +147,27 @@ export const updateUser = async (req, res) => {
       });
     }
 
-    // Update the user
-    const user = await UserModel.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    if (!user) {
+    // Check the current password
+    const { currentPassword, password } = req.body;
+    const isPasswordValid = await bcrypt.compare(currentPassword, userToUpdate.password);
+    if (!isPasswordValid) {
       // Log error message
-      logger.error(`User not found with ID: ${req.params.id}`);
-      return res.status(404).json({ message: "User not found" });
+      logger.error(`Invalid current password for user with ID: ${req.params.id}`);
+      return res.status(401).json({ message: "Invalid current password" });
     }
 
-    // Log success message
-    logger.info(`User updated: ${user.email}`);
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    res.json(user);
+    // Update the user
+    const updatedUser = await UserModel.findByIdAndUpdate(req.params.id, { ...req.body, password: hashedPassword }, {
+      new: true,
+    });
+
+    // Log success message
+    logger.info(`User updated: ${updatedUser.email}`);
+
+    res.json(updatedUser);
   } catch (error) {
     // Log error message
     logger.error(`Error updating user: ${error.message}`);
