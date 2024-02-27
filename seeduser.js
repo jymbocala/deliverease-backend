@@ -13,23 +13,20 @@ const DB_URI = process.env.DB_URI; // Get the MongoDB URI from the environment v
 const users = [
         {
                 email: "deliverease1@gmail.com",
-                password: "password1",
-                isAdmin: false,
+                password: "password1"
         },
         {
                 email: "deliverease2@gmail.com",
-                password: "password2",
-                isAdmin: false,
+                password: "password2"
         },
         {
                 email: "deliverease3@gmail.com",
-                password: "password3",
-                isAdmin: false,
+                password: "password3"
         },
         {
                 email: "admin@gmail.com",
                 password: "adminpassword",
-                isAdmin: true,
+                role: "admin"
         },
 ];
 
@@ -45,7 +42,7 @@ mongoose.connect(DB_URI)
                 // Hash passwords and insert the users from the users array into the database
                 const createdUsers = await Promise.all(users.map(async user => {
                         const hashedPassword = await bcrypt.hash(user.password, 10); // Hash the password
-                        const newUser = new UserModel({ email: user.email, password: hashedPassword, isAdmin: user.isAdmin }); // Create a new user with the hashed password and isAdmin field
+                        const newUser = new UserModel({ email: user.email, password: hashedPassword, role: user.role }); // Create a new user with the hashed password and role field
                         return newUser.save(); // Save the new user to the database
                 }));
 
