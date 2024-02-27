@@ -4,12 +4,23 @@ import mongoose from "mongoose";
 
 // Create a new location
 export const createLocation = async (req, res) => {
-  const { name, address } = req.body;
+  const {
+    name,
+    address,
+    dockNumber,
+    dockHours,
+    parking,
+    contactName,
+    contactNumber,
+    notes,
+    dateCreated,
+    imageURL,
+  } = req.body;
 
   // Check if req.user is defined
   if (!req.user) {
-    logger.error('No user associated with request');
-    return res.status(400).json({ message: 'No user associated with request' });
+    logger.error("No user associated with request");
+    return res.status(400).json({ message: "No user associated with request" });
   }
 
   try {
@@ -17,7 +28,19 @@ export const createLocation = async (req, res) => {
     const userId = req.user._id;
 
     // Create a new location with createdBy field populated
-    const location = new LocationModel({ name, address, createdBy: userId });
+    const location = new LocationModel({
+      name,
+      address,
+      createdBy: userId,
+      dockNumber,
+      dockHours,
+      parking,
+      contactName,
+      contactNumber,
+      notes,
+      dateCreated,
+      imageURL,
+    });
 
     // Save the location to the database
     await location.save();
@@ -80,8 +103,8 @@ export const getLocation = async (req, res) => {
   console.log(req.params.id);
   // Check if req.user is defined
   if (!req.user) {
-    logger.error('No user associated with request');
-    return res.status(400).json({ message: 'No user associated with request' });
+    logger.error("No user associated with request");
+    return res.status(400).json({ message: "No user associated with request" });
   }
 
   // Log the location ID and user ID
@@ -114,8 +137,8 @@ export const getLocation = async (req, res) => {
 export const updateLocation = async (req, res) => {
   // Check if req.user is defined
   if (!req.user) {
-    logger.error('No user associated with request');
-    return res.status(400).json({ message: 'No user associated with request' });
+    logger.error("No user associated with request");
+    return res.status(400).json({ message: "No user associated with request" });
   }
 
   try {
@@ -148,8 +171,8 @@ export const updateLocation = async (req, res) => {
 export const deleteLocation = async (req, res) => {
   // Check if req.user is defined
   if (!req.user) {
-    logger.error('No user associated with request');
-    return res.status(400).json({ message: 'No user associated with request' });
+    logger.error("No user associated with request");
+    return res.status(400).json({ message: "No user associated with request" });
   }
 
   try {

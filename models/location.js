@@ -16,7 +16,7 @@ const locationSchema = new mongoose.Schema({
     },
     // The dockNumber field is optional
     dockNumber: {
-        type: Number,
+        type: String,
         required: false,
     },
     // The dockHours field is optional
