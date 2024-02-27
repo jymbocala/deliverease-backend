@@ -1,5 +1,6 @@
 import LocationModel from "../models/location.js";
 import logger from "../utils/logger.js";
+import mongoose from "mongoose";
 
 // Create a new location
 export const createLocation = async (req, res) => {
@@ -64,12 +65,17 @@ export const getLocation = async (req, res) => {
     return res.status(400).json({ message: 'No user associated with request' });
   }
 
+  // Log the location ID and user ID
+  logger.info(`Location ID: ${req.params.id}`);
+  logger.info(`User ID: ${req.user._id}`);
+
   try {
-    // Find the location by ID and ensure it's owned by the logged-in user
+    // Find the location by ID and ensure it's created by the logged-in user
     const location = await LocationModel.findOne({
       _id: req.params.id,
-      owner: req.user._id,
+      createdBy: req.user._id,
     });
+
     if (!location)
       return res.status(404).json({ message: "Location not found" });
 
