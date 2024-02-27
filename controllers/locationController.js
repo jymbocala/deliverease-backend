@@ -5,6 +5,12 @@ import logger from "../utils/logger.js";
 export const createLocation = async (req, res) => {
   const { name, address } = req.body;
 
+  // Check if req.user is defined
+  if (!req.user) {
+    logger.error('No user associated with request');
+    return res.status(400).json({ message: 'No user associated with request' });
+  }
+
   try {
     // Retrieve the user ID from the request
     const userId = req.user._id;
@@ -52,6 +58,12 @@ export const getAllLocations = async (req, res) => {
 
 // Get a location by ID
 export const getLocation = async (req, res) => {
+  // Check if req.user is defined
+  if (!req.user) {
+    logger.error('No user associated with request');
+    return res.status(400).json({ message: 'No user associated with request' });
+  }
+
   try {
     // Find the location by ID and ensure it's owned by the logged-in user
     const location = await LocationModel.findOne({
@@ -75,6 +87,12 @@ export const getLocation = async (req, res) => {
 
 // Update a location by ID
 export const updateLocation = async (req, res) => {
+  // Check if req.user is defined
+  if (!req.user) {
+    logger.error('No user associated with request');
+    return res.status(400).json({ message: 'No user associated with request' });
+  }
+
   try {
     // Find the location by ID and ensure it's owned by the logged-in user
     let location = await LocationModel.findOne({
@@ -103,6 +121,12 @@ export const updateLocation = async (req, res) => {
 
 // Delete a location by ID
 export const deleteLocation = async (req, res) => {
+  // Check if req.user is defined
+  if (!req.user) {
+    logger.error('No user associated with request');
+    return res.status(400).json({ message: 'No user associated with request' });
+  }
+
   try {
     // Find the location by ID and ensure it's owned by the logged-in user
     const location = await LocationModel.findOneAndDelete({
