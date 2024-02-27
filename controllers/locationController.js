@@ -56,8 +56,27 @@ export const getAllLocations = async (req, res) => {
   }
 };
 
+// Get locations created by the current user
+export const getUserLocations = async (req, res) => {
+  try {
+    // Retrieve locations created by the current user
+    const locations = await LocationModel.find({ createdBy: req.user._id });
+
+    // Log success message
+    logger.info("User's locations retrieved");
+
+    // Send the response
+    res.json(locations);
+  } catch (error) {
+    // Log error message
+    logger.error(`Error retrieving user's locations: ${error.message}`);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Get a location by ID
 export const getLocation = async (req, res) => {
+  console.log(req.params.id);
   // Check if req.user is defined
   if (!req.user) {
     logger.error('No user associated with request');
