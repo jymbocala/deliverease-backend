@@ -28,11 +28,6 @@ const authMiddleware = async (req, res, next) => {
       return res.status(401).json({ error: 'Authentication failed: User not found' });
     }
 
-    // Remove the role check
-    logger.info('Access granted: User is authorized to access this resource');
-    return res.status(200).json({ message: 'Access granted: User is authorized to access this resource' });
-
-
     // Proceed to the protected route
     next();
   } catch (error) {
