@@ -28,15 +28,10 @@ const authMiddleware = async (req, res, next) => {
       return res.status(401).json({ error: 'Authentication failed: User not found' });
     }
 
-    // Check if the user has admin role
-    if (user.role !== 'admin') {
-      logger.error('Forbidden: User is not authorized to access this resource');
-      return res.status(403).json({ error: 'Forbidden: User is not authorized to access this resource' });
-    }
+    // Remove the role check
+    logger.info('Access granted: User is authorized to access this resource');
+    return res.status(200).json({ message: 'Access granted: User is authorized to access this resource' });
 
-    // Attach the user object and token to the request for further use in route handlers
-    req.user = user;
-    req.token = token;
 
     // Proceed to the protected route
     next();
