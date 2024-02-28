@@ -142,10 +142,12 @@ export const updateLocation = async (req, res) => {
   }
 
   try {
+    console.log("request id", req.params.id);
+    console.log("request body", req.body);
     // Find the location by ID and ensure it's owned by the logged-in user
     let location = await LocationModel.findOne({
       _id: req.params.id,
-      owner: req.user._id,
+      createdBy: req.user._id,
     });
     if (!location)
       return res.status(404).json({ message: "Location not found" });
