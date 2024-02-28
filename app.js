@@ -8,8 +8,10 @@ import { getGoogleMapsApiKey } from './googleMaps.js';
 // Initialize express application
 const app = express();
 
-// Use CORS middleware to handle Cross-Origin Resource Sharing
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173'
+  }));
+  
 
 // Use express.json middleware to parse JSON request bodies
 app.use(express.json());
