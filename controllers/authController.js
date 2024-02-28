@@ -33,7 +33,7 @@ export const forgotPassword = async (req, res) => {
     `;
 
     const mailData = {
-      from: "noreply@example.com",
+      from: "support@deliverease.com",
       to: email,
       subject: "Reset your password",
       html: emailTemplate,
