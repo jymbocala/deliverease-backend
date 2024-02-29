@@ -2,12 +2,12 @@ import mongoose from 'mongoose';
 import UserModel from "./models/user.js";
 import {closeConnection} from "./db.js";
 import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken'; // Import jsonwebtoken
-import bcrypt from 'bcrypt'; // Import bcrypt
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt'; 
 
-dotenv.config(); // Load environment variables from .env file
+dotenv.config(); 
 
-const DB_URI = process.env.DB_URI; // Get the MongoDB URI from the environment variables
+const DB_URI = process.env.DB_URI; 
 
 // Array of user objects to seed the database with
 const users = [

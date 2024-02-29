@@ -8,7 +8,7 @@ import {
     deleteUser,
     getAllUsers
 } from '../controllers/userController.js';
-import authMiddleware from '../middleware/authMiddleware.js'; // Import the authentication middleware
+import authMiddleware from '../middleware/authMiddleware.js'; 
 
 const router = express.Router();
 

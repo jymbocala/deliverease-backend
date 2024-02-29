@@ -1,9 +1,9 @@
-import LocationModel from "../models/location.js";
-import logger from "../utils/logger.js";
-import mongoose from "mongoose";
+import LocationModel from "../models/location.js"; 
+import logger from "../utils/logger.js"; // Logger for logging information and errors
 
 // Create a new location
 export const createLocation = async (req, res) => {
+  // Destructure location details from request body
   const {
     name,
     address,
@@ -17,7 +17,7 @@ export const createLocation = async (req, res) => {
     imageURL,
   } = req.body;
 
-  // Check if req.user is defined
+  // Check if req.user is defined, if not, return an error
   if (!req.user) {
     logger.error("No user associated with request");
     return res.status(400).json({ message: "No user associated with request" });
@@ -100,16 +100,11 @@ export const getUserLocations = async (req, res) => {
 
 // Get a location by ID
 export const getLocation = async (req, res) => {
-  console.log(req.params.id);
-  // Check if req.user is defined
+  // Check if req.user is defined, if not, return an error
   if (!req.user) {
     logger.error("No user associated with request");
     return res.status(400).json({ message: "No user associated with request" });
   }
-
-  // Log the location ID and user ID
-  logger.info(`Location ID: ${req.params.id}`);
-  logger.info(`User ID: ${req.user._id}`);
 
   try {
     // Find the location by ID and ensure it's created by the logged-in user
@@ -135,15 +130,13 @@ export const getLocation = async (req, res) => {
 
 // Update a location by ID
 export const updateLocation = async (req, res) => {
-  // Check if req.user is defined
+  // Check if req.user is defined, if not, return an error
   if (!req.user) {
     logger.error("No user associated with request");
     return res.status(400).json({ message: "No user associated with request" });
   }
 
   try {
-    console.log("request id", req.params.id);
-    console.log("request body", req.body);
     // Find the location by ID and ensure it's owned by the logged-in user
     let location = await LocationModel.findOne({
       _id: req.params.id,
@@ -171,7 +164,7 @@ export const updateLocation = async (req, res) => {
 
 // Delete a location by ID
 export const deleteLocation = async (req, res) => {
-  // Check if req.user is defined
+  // Check if req.user is defined, if not, return an error
   if (!req.user) {
     logger.error("No user associated with request");
     return res.status(400).json({ message: "No user associated with request" });
