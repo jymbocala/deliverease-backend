@@ -25,7 +25,7 @@ export const forgotPassword = async (req, res) => {
 
     await user.save();
 
-    const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
+    const resetLink = `http://localhost:5173/reset-password/${resetToken}`;
     const emailTemplate = `
       <p>Please reset your password by clicking the link below:</p>
       <a href="${resetLink}">Reset Password</a>
