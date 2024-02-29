@@ -3,9 +3,9 @@ import LocationModel from "./models/location.js";
 import {closeConnection} from "./db.js";
 import dotenv from 'dotenv';
 
-dotenv.config(); // Load environment variables from .env file
+dotenv.config(); 
 
-const DB_URI = process.env.DB_URI; // Get the MongoDB URI from the environment variables
+const DB_URI = process.env.DB_URI; 
 
 // Array of location objects to seed the database with
 const locations = [
