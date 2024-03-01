@@ -33,7 +33,7 @@ export const forgotPassword = async (req, res) => {
     await user.save();
 
     // Construct reset link with the generated token
-    const resetLink = `https://deliverease-api.onrender.com/reset-password/${resetToken}`;
+    const resetLink = `https://deliverease.live/reset-password/${resetToken}`;
     // Construct email template with the reset link
     const emailTemplate = `
       <p>Please reset your password by clicking the link below:</p>
