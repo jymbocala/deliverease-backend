@@ -4,8 +4,6 @@ import multer from "multer";
 
 const router = Router();
 
-// const upload = multer({ dest: "uploads/" }); // Specify the destination folder to store uploaded files
-
 const upload = multer();
 
 // Route to upload an image to AWS S3
@@ -48,7 +46,7 @@ router.delete("/delete/:fileKey", async (req, res) => {
   try {
     const fileKey = req.params.fileKey;
 
-    await deleteFromS3(fileKey); // Implement this function in your s3.js file
+    await deleteFromS3(fileKey);
 
     res.json({ message: "Image deleted successfully" });
   } catch (error) {

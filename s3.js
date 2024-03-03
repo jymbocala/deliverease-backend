@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 // Load environment variables from the .env file
 dotenv.config();
 
-// Configure the AWS SDK with your credentials
 AWS.config.update({
   accessKeyId: process.env.S3_ACCESS_KEY_ID,
   secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
