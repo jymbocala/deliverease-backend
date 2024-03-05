@@ -17,7 +17,7 @@ const app = express();
 // Use CORS middleware to allow requests from specific origin
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://deliverease-api.onrender.com", "https://deliverease.live"],
+    origin: ["http://localhost:5173", "https://deliverease-api.onrender.com", "https://deliverease.live", "deliverease2.netlify.app"],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true, // Allow sending cookies across origins
   })
